@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { Employee } from "@/types";
 import { getUniqueValues } from "@/lib/dataUtils";
 
@@ -20,37 +21,71 @@ interface SidebarProps {
 }
 
 function MultiSelect({
+  title,
   options,
   selected,
   onChange,
-  placeholder,
 }: {
+  title: string;
   options: string[];
   selected: string[];
   onChange: (v: string[]) => void;
-  placeholder?: string;
 }) {
-  if (options.length === 0) return <div style={{ fontSize: "0.72rem", color: "#aaa", padding: "6px" }}>{placeholder || "Không có dữ liệu"}</div>;
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const count = selected.length;
+
+  const filteredOptions = options.filter(opt =>
+    opt.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (options.length === 0) return (
+    <div style={{ padding: "10px 12px", fontSize: "0.8rem", color: "#94a3b8", border: "1px solid rgba(15,23,42,0.07)", borderRadius: 8 }}>
+      {title}: Không có dữ liệu
+    </div>
+  );
 
   const toggle = (val: string) => {
     onChange(selected.includes(val) ? selected.filter((x) => x !== val) : [...selected, val]);
   };
-  const allSelected = selected.length === 0;
 
   return (
-    <div className="sidebar-multiselect">
-      {options.map((opt) => (
-        <label key={opt}>
+    <div className="filter-group">
+      <button
+        className="filter-toggle"
+        onClick={() => setIsOpen(!isOpen)}
+        style={count > 0 ? { color: "#6366f1", borderColor: "rgba(99,102,241,0.3)", background: "rgba(99,102,241,0.04)" } : {}}
+      >
+        <span>{title}{count > 0 && <span style={{ marginLeft: 6, background: "#6366f1", color: "white", borderRadius: 20, padding: "1px 7px", fontSize: "0.7rem", fontWeight: 700 }}>{count}</span>}</span>
+        <span style={{ fontSize: "0.65rem", color: "#94a3b8", transform: isOpen ? "rotate(180deg)" : "none", display: "inline-block", transition: "transform 0.2s" }}>▼</span>
+      </button>
+
+      {isOpen && (
+        <div className="sidebar-multiselect">
           <input
-            type="checkbox"
-            checked={selected.includes(opt)}
-            onChange={() => toggle(opt)}
+            type="text"
+            placeholder="Tìm kiếm..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={opt}>
-            {opt}
-          </span>
-        </label>
-      ))}
+          {filteredOptions.length === 0 ? (
+            <div style={{ fontSize: "0.78rem", color: "#94a3b8", padding: "4px 8px" }}>Không tìm thấy</div>
+          ) : (
+            filteredOptions.map((opt) => (
+              <label key={opt}>
+                <input
+                  type="checkbox"
+                  checked={selected.includes(opt)}
+                  onChange={() => toggle(opt)}
+                />
+                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={opt}>
+                  {opt}
+                </span>
+              </label>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -62,7 +97,6 @@ export default function Sidebar({
   onReload, loading,
 }: SidebarProps) {
 
-  // Cascading filter options
   const filteredByDiv = selectedDivisions.length
     ? employees.filter((e) => selectedDivisions.includes(e.division_name))
     : employees;
@@ -78,55 +112,49 @@ export default function Sidebar({
     "team_name"
   );
 
+  const hasFilters = selectedDivisions.length + selectedDepartments.length + selectedSections.length + selectedTeams.length > 0;
+
   return (
     <aside className="sidebar">
       {/* Logo */}
       <div className="sidebar-logo">
-        <div className="app-title">📊 GTalk Messaging</div>
-        <div className="app-sub">Adoption Report · IBCS</div>
+        <div className="app-title">GTalk Messaging</div>
+        <div className="app-sub">Adoption Report · EX Team</div>
       </div>
 
       <div className="sidebar-body">
         {/* Reload */}
         <button className="sidebar-reload-btn" onClick={onReload} disabled={loading}>
-          {loading ? "⏳ Đang tải..." : "🔄 Reload Data"}
+          {loading ? "Đang tải..." : "Tải lại dữ liệu"}
         </button>
 
-        {/* Date selector */}
+        {/* Date */}
         <div className="sidebar-label">Ngày Báo Cáo</div>
-        <select
-          value={selectedDate}
-          onChange={(e) => onDateChange(e.target.value)}
-        >
+        <select value={selectedDate} onChange={(e) => onDateChange(e.target.value)}>
           {allDates.map((d) => (
             <option key={d} value={d}>{d}</option>
           ))}
         </select>
 
-        {/* Division */}
-        <div className="sidebar-label">Khối (Division)</div>
-        <MultiSelect options={divisionOptions} selected={selectedDivisions} onChange={onDivisionsChange} />
+        {/* Filters header */}
+        <div className="sidebar-label" style={{ marginTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span>Bộ Lọc</span>
+          {hasFilters && (
+            <button
+              onClick={() => { onDivisionsChange([]); onDepartmentsChange([]); onSectionsChange([]); onTeamsChange([]); }}
+              style={{ fontSize: "0.68rem", color: "#f43f5e", background: "none", border: "none", cursor: "pointer", fontWeight: 600, padding: 0 }}
+            >
+              Xoá tất cả
+            </button>
+          )}
+        </div>
 
-        {/* Department */}
-        <div className="sidebar-label">Phòng Ban (Dept)</div>
-        <MultiSelect options={departmentOptions} selected={selectedDepartments} onChange={onDepartmentsChange} />
-
-        {/* Section */}
-        <div className="sidebar-label">Bộ Phận (Section)</div>
-        <MultiSelect options={sectionOptions} selected={selectedSections} onChange={onSectionsChange} />
-
-        {/* Team */}
-        <div className="sidebar-label">Team</div>
-        <MultiSelect options={teamOptions} selected={selectedTeams} onChange={onTeamsChange} />
-      </div>
-
-      {/* Legend */}
-      <div className="sidebar-legend">
-        <strong style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>Ký hiệu IBCS</strong>
-        <div className="legend-row"><span className="legend-swatch leg-ac" /> Hiện tại (AC)</div>
-        <div className="legend-row"><span className="legend-swatch leg-py" /> Kỳ trước (PY)</div>
-        <div className="legend-row"><span className="legend-swatch leg-pos" /> Tăng (Δ+)</div>
-        <div className="legend-row"><span className="legend-swatch leg-neg" /> Giảm (Δ−)</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <MultiSelect title="Khối" options={divisionOptions} selected={selectedDivisions} onChange={onDivisionsChange} />
+          <MultiSelect title="Phòng Ban" options={departmentOptions} selected={selectedDepartments} onChange={onDepartmentsChange} />
+          <MultiSelect title="Bộ Phận" options={sectionOptions} selected={selectedSections} onChange={onSectionsChange} />
+          <MultiSelect title="Team" options={teamOptions} selected={selectedTeams} onChange={onTeamsChange} />
+        </div>
       </div>
     </aside>
   );

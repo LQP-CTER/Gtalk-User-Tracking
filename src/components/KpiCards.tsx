@@ -22,14 +22,14 @@ export default function KpiCards({ curr, prev, first, selectedDate, prevDate }: 
     <div className="kpi-grid">
       {/* Total HC */}
       <div className="kpi-card">
-        <div className="kpi-label">👥 Tổng Nhân Sự</div>
+        <div className="kpi-label">Tổng Nhân Sự</div>
         <div className="kpi-value">{fmtNumber(curr.totalHc)}</div>
         <div className="kpi-sub">Tổng headcount trong biên chế</div>
       </div>
 
-      {/* Active - sent messages */}
+      {/* Active */}
       <div className="kpi-card green">
-        <div className="kpi-label">💬 Đã Nhắn Tin</div>
+        <div className="kpi-label">Đã Nhắn Tin</div>
         <div className="kpi-value">{fmtNumber(curr.activeCount)}</div>
         <div className="kpi-sub">
           Có nhắn tin trên Gtalk ·{" "}
@@ -40,17 +40,17 @@ export default function KpiCards({ curr, prev, first, selectedDate, prevDate }: 
 
       {/* Not yet */}
       <div className="kpi-card red">
-        <div className="kpi-label">⏳ Chưa Nhắn Tin</div>
+        <div className="kpi-label">Chưa Nhắn Tin</div>
         <div className="kpi-value">{fmtNumber(curr.inactiveCount)}</div>
         <div className="kpi-sub">Chưa nhắn tin trên Gtalk ngày {selectedDate}</div>
       </div>
 
       {/* % */}
       <div className="kpi-card blue">
-        <div className="kpi-label">📈 Tỷ Lệ Nhắn Tin</div>
+        <div className="kpi-label">Tỷ Lệ Nhắn Tin</div>
         <div className="kpi-value">{fmtPct(curr.pct)}</div>
         <div className="kpi-sub">
-          Δ kỳ trước:{" "}
+          Kỳ trước:{" "}
           <span className={dPct.cls}>{dPct.text}</span>
           {" "} · Tích lũy:{" "}
           <span className={cumulativeGrowth >= 0 ? "pos" : "neg"}>

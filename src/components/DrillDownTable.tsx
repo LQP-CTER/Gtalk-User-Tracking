@@ -9,14 +9,13 @@ interface DrillDownTableProps {
 }
 
 const LEVELS = [
-  { key: "division_name", label: "Khối (Division)" },
+  { key: "division_name", label: "Khối" },
   { key: "department_name", label: "Phòng Ban" },
   { key: "section_name", label: "Bộ Phận" },
   { key: "team_name", label: "Team" },
 ];
 
 export default function DrillDownTable({ data, level, onLevelChange }: DrillDownTableProps) {
-  // Totals
   const totals = data.reduce(
     (acc, r) => ({
       total: acc.total + r.total,
@@ -33,7 +32,7 @@ export default function DrillDownTable({ data, level, onLevelChange }: DrillDown
 
   return (
     <div className="section">
-      <div className="section-title">Chi Tiết Phân Bổ (Drill-Down)</div>
+      <div className="section-title">Chi Tiết Phân Bổ</div>
       <div className="drill-selector">
         {LEVELS.map((l) => (
           <button
@@ -53,16 +52,16 @@ export default function DrillDownTable({ data, level, onLevelChange }: DrillDown
           <table className="ibcs-table">
             <thead>
               <tr>
-                <th style={{ width: 30 }}>#</th>
+                <th style={{ width: 32 }}>#</th>
                 <th>{LEVELS.find((l) => l.key === level)?.label}</th>
                 <th className="num">HC</th>
                 <th className="num">Nhắn tin</th>
                 <th className="num">Chưa</th>
-                <th className="num">% AC</th>
-                <th style={{ minWidth: 80 }}></th>
-                <th className="num">% PY</th>
-                <th className="num">Δ%</th>
-                <th className="num">Δ Abs</th>
+                <th className="num">Tỷ lệ</th>
+                <th style={{ minWidth: 90 }}></th>
+                <th className="num">Kỳ trước</th>
+                <th className="num">Thay đổi</th>
+                <th className="num">Số tuyệt đối</th>
               </tr>
             </thead>
             <tbody>
@@ -71,33 +70,32 @@ export default function DrillDownTable({ data, level, onLevelChange }: DrillDown
                 const sign = r.deltaPct > 0 ? "+" : "";
                 return (
                   <tr key={r.name}>
-                    <td className="num" style={{ color: "#bbb", fontSize: "0.7rem" }}>{r.rank}</td>
-                    <td style={{ maxWidth: 280, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={r.name}>{r.name}</td>
+                    <td className="num" style={{ color: "#cbd5e1", fontSize: "0.75rem", fontWeight: 600 }}>{r.rank}</td>
+                    <td style={{ maxWidth: 280, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: 500 }} title={r.name}>{r.name}</td>
                     <td className="num">{r.total.toLocaleString("vi-VN")}</td>
-                    <td className="num">{r.activeC.toLocaleString("vi-VN")}</td>
-                    <td className="num" style={{ color: "#888" }}>{r.inactive.toLocaleString("vi-VN")}</td>
-                    <td className="num" style={{ fontWeight: 600 }}>{r.pctC.toFixed(1)}%</td>
+                    <td className="num" style={{ fontWeight: 600 }}>{r.activeC.toLocaleString("vi-VN")}</td>
+                    <td className="num" style={{ color: "#94a3b8" }}>{r.inactive.toLocaleString("vi-VN")}</td>
+                    <td className="num" style={{ fontWeight: 700 }}>{r.pctC.toFixed(1)}%</td>
                     <td>
-                      <div className="mini-bar-bg">
-                        <div className="mini-bar-fill" style={{ width: `${Math.min(r.pctC, 100)}%` }} />
+                      <div className="table-progress-bg">
+                        <div className="table-progress-fill" style={{ width: `${Math.min(r.pctC, 100)}%` }} />
                       </div>
                     </td>
-                    <td className="num" style={{ color: "#888" }}>{r.pctP.toFixed(1)}%</td>
+                    <td className="num" style={{ color: "#94a3b8" }}>{r.pctP.toFixed(1)}%</td>
                     <td className={`num ${deltaClass}`}>{sign}{r.deltaPct.toFixed(1)}pp</td>
                     <td className={`num ${deltaClass}`}>{sign}{r.deltaAbs.toLocaleString("vi-VN")}</td>
                   </tr>
                 );
               })}
-              {/* Total row */}
               <tr className="total-row">
                 <td></td>
                 <td><strong>TỔNG CỘNG</strong></td>
                 <td className="num">{totals.total.toLocaleString("vi-VN")}</td>
                 <td className="num">{totals.activeC.toLocaleString("vi-VN")}</td>
-                <td className="num" style={{ color: "#888" }}>{totals.inactive.toLocaleString("vi-VN")}</td>
-                <td className="num" style={{ fontWeight: 700 }}>{tPct.toFixed(1)}%</td>
+                <td className="num">{totals.inactive.toLocaleString("vi-VN")}</td>
+                <td className="num">{tPct.toFixed(1)}%</td>
                 <td></td>
-                <td className="num" style={{ color: "#888" }}>{tPctP.toFixed(1)}%</td>
+                <td className="num">{tPctP.toFixed(1)}%</td>
                 <td className={`num ${tDeltaPct > 0 ? "pos" : tDeltaPct < 0 ? "neg" : "neutral"}`}>
                   {tDeltaPct > 0 ? "+" : ""}{tDeltaPct.toFixed(1)}pp
                 </td>

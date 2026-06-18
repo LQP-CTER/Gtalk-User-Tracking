@@ -1,7 +1,7 @@
 "use client";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  Legend, ResponsiveContainer, Cell,
+  Legend, ResponsiveContainer,
 } from "recharts";
 import { DivisionRow } from "@/types";
 
@@ -14,11 +14,21 @@ interface DivisionChartProps {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
-    <div style={{ background: "#fff", border: "1px solid #ddd", padding: "10px 14px", fontSize: "0.78rem", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
-      <p style={{ fontWeight: 700, marginBottom: 6 }}>{label}</p>
+    <div style={{
+      background: "white",
+      border: "1px solid rgba(15,23,42,0.08)",
+      borderRadius: "10px",
+      padding: "12px 16px",
+      fontSize: "0.83rem",
+      color: "#0f172a",
+      boxShadow: "0 8px 24px rgba(0,0,0,0.10)",
+      minWidth: 200,
+    }}>
+      <p style={{ fontWeight: 700, marginBottom: 8, color: "#64748b", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
       {payload.map((p: any) => (
-        <div key={p.dataKey} style={{ color: p.color }}>
-          {p.name}: <strong>{p.value.toFixed(1)}%</strong>
+        <div key={p.dataKey} style={{ display: "flex", justifyContent: "space-between", gap: 20, marginBottom: 4 }}>
+          <span style={{ color: p.color, fontWeight: 500 }}>{p.name}</span>
+          <strong>{p.value.toFixed(1)}%</strong>
         </div>
       ))}
     </div>
@@ -28,35 +38,53 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export default function DivisionChart({ data, selectedDate, prevDate }: DivisionChartProps) {
   if (!data.length) return null;
 
-  // Sort ascending for horizontal bar (highest at top)
   const sorted = [...data].sort((a, b) => a.pctCurr - b.pctCurr);
-
-  const top = data[0];
-  const bottom = data[data.length - 1];
+  const top = [...data].sort((a, b) => b.pctCurr - a.pctCurr)[0];
+  const bottom = [...data].sort((a, b) => a.pctCurr - b.pctCurr)[0];
   const msg = `Cao nhất: ${top?.name} (${top?.pctCurr.toFixed(1)}%) · Thấp nhất: ${bottom?.name} (${bottom?.pctCurr.toFixed(1)}%)`;
 
   return (
     <div className="section">
-      <div className="section-title">Phân Tích Theo Khối (Division)</div>
+      <div className="section-title">Phân Tích Theo Khối</div>
       <div className="section-msg">{msg}</div>
       <div className="grid-3-2" style={{ alignItems: "start" }}>
         {/* Chart */}
         <div>
-          <ResponsiveContainer width="100%" height={Math.max(280, sorted.length * 52)}>
+          <ResponsiveContainer width="100%" height={Math.max(260, sorted.length * 50)}>
             <BarChart
               layout="vertical"
               data={sorted}
-              margin={{ top: 5, right: 70, bottom: 5, left: 160 }}
+              margin={{ top: 4, right: 60, bottom: 4, left: 160 }}
             >
-              <CartesianGrid horizontal={false} stroke="#f0f0f0" />
-              <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10, fill: "#888" }} tickFormatter={(v) => `${v}%`} />
-              <YAxis type="category" dataKey="name" tick={{ fontSize: 9, fill: "#555" }} width={155} />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend wrapperStyle={{ fontSize: "0.74rem" }} iconType="square" />
+              <defs>
+                <linearGradient id="gradCurr" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity={0.9} />
+                  <stop offset="100%" stopColor="#3b82f6" stopOpacity={1} />
+                </linearGradient>
+                <linearGradient id="gradPrev" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#e2e8f0" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#cbd5e1" stopOpacity={1} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid horizontal={false} stroke="rgba(15,23,42,0.05)" />
+              <XAxis
+                type="number" domain={[0, 100]}
+                tick={{ fontSize: 11, fill: "#94a3b8", fontFamily: "Inter" }}
+                tickFormatter={(v) => `${v}%`}
+                axisLine={false} tickLine={false}
+              />
+              <YAxis
+                type="category" dataKey="name"
+                tick={{ fontSize: 11, fill: "#475569", fontFamily: "Inter" }}
+                width={155}
+                axisLine={false} tickLine={false}
+              />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.04)" }} />
+              <Legend wrapperStyle={{ fontSize: "0.82rem", color: "#64748b" }} iconType="circle" />
               {prevDate && (
-                <Bar dataKey="pctPrev" name={`Kỳ trước (${prevDate})`} fill="#cccccc" maxBarSize={12} radius={[0, 2, 2, 0]} />
+                <Bar dataKey="pctPrev" name={`Kỳ trước (${prevDate})`} fill="url(#gradPrev)" maxBarSize={13} radius={[0, 4, 4, 0]} />
               )}
-              <Bar dataKey="pctCurr" name={`Hiện tại (${selectedDate})`} fill="#1a1a1a" maxBarSize={12} radius={[0, 2, 2, 0]} />
+              <Bar dataKey="pctCurr" name={`Hiện tại (${selectedDate})`} fill="url(#gradCurr)" maxBarSize={13} radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -70,7 +98,7 @@ export default function DivisionChart({ data, selectedDate, prevDate }: Division
                 <th className="num">HC</th>
                 <th className="num">Nhắn tin</th>
                 <th className="num">%</th>
-                <th className="num">Δ%</th>
+                <th className="num">Thay đổi</th>
               </tr>
             </thead>
             <tbody>
@@ -85,7 +113,6 @@ export default function DivisionChart({ data, selectedDate, prevDate }: Division
                   </td>
                 </tr>
               ))}
-              {/* Total row */}
               {(() => {
                 const t = data.reduce((acc, r) => ({
                   total: acc.total + r.total,
@@ -100,7 +127,7 @@ export default function DivisionChart({ data, selectedDate, prevDate }: Division
                     <td><strong>TỔNG</strong></td>
                     <td className="num">{t.total.toLocaleString("vi-VN")}</td>
                     <td className="num">{t.activeCurr.toLocaleString("vi-VN")}</td>
-                    <td className="num" style={{ fontWeight: 700 }}>{pct.toFixed(1)}%</td>
+                    <td className="num">{pct.toFixed(1)}%</td>
                     <td className={`num ${d > 0 ? "pos" : d < 0 ? "neg" : "neutral"}`}>
                       {d > 0 ? "+" : ""}{d.toFixed(1)}pp
                     </td>

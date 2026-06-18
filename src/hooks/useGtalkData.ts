@@ -6,8 +6,8 @@ import { Employee, ActiveByDate, GtalkData } from "@/types";
 const SHEET_ID = "1p6cj7feop34eqLNAWNKC1ew8bTA1vl8UUS8e6SISjiY";
 
 // Google Sheets CSV export (requires sheet to be publicly shared)
-const WORKFORCE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&sheet=Workforce`;
-const USER_ACTIVE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&sheet=user_active`;
+const WORKFORCE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
+const USER_ACTIVE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=1300871074`;
 
 async function fetchCsv(url: string): Promise<string[][]> {
   const res = await fetch(url);
@@ -137,7 +137,7 @@ export function useGtalkData(): GtalkData & { reload: () => void } {
       const allDates = Object.keys(activeByDate).sort((a, b) => {
         const toMs = (d: string) => {
           const [day, month] = d.split("/").map(Number);
-          return new Date(2025, month - 1, day).getTime();
+          return new Date(2026, month - 1, day).getTime(); // updated to 2026
         };
         return toMs(a) - toMs(b);
       });

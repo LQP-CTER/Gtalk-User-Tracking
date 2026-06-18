@@ -11,12 +11,8 @@ import Sidebar from "@/components/Sidebar";
 import KpiCards from "@/components/KpiCards";
 import TrendChart from "@/components/TrendChart";
 import DivisionChart from "@/components/DivisionChart";
-import WaterfallChart from "@/components/WaterfallChart";
-import TopBottomChart from "@/components/TopBottomChart";
+
 import DrillDownTable from "@/components/DrillDownTable";
-import DailyNewChart from "@/components/DailyNewChart";
-import CumulativeChart from "@/components/CumulativeChart";
-import DistributionChart from "@/components/DistributionChart";
 
 export default function DashboardPage() {
   const { employees, activeByDate, allDates, loading, error, reload } = useGtalkData();
@@ -61,11 +57,7 @@ export default function DashboardPage() {
     [filteredEmployees, effectiveDate, prevDate, activeByDate, drillLevel]
   );
 
-  // ─── Department-level for distribution ───────────────────────────────────
-  const deptData = useMemo(
-    () => buildDivisionData(filteredEmployees, effectiveDate, prevDate, activeByDate, "department_name"),
-    [filteredEmployees, effectiveDate, prevDate, activeByDate]
-  );
+
 
   // ─── Loading ──────────────────────────────────────────────────────────────
   if (loading) return (
@@ -74,7 +66,7 @@ export default function DashboardPage() {
         <div className="loading-overlay">
           <div className="spinner" />
           <p>Đang tải dữ liệu từ Google Sheets…</p>
-          <p style={{ fontSize: "0.72rem", color: "#bbb" }}>Vui lòng đảm bảo Google Sheet đã được share "Anyone with link"</p>
+          <p style={{ fontSize: "0.78rem", color: "#94a3b8" }}>Vui lòng đảm bảo Google Sheet đã được share "Anyone with link"</p>
         </div>
       </div>
     </div>
@@ -86,14 +78,14 @@ export default function DashboardPage() {
       <div className="main">
         <div className="content">
           <div className="error-box">
-            <p><strong>❌ Không thể tải dữ liệu</strong></p>
+            <p><strong>Không thể tải dữ liệu</strong></p>
             <p>{error}</p>
             <p style={{ marginTop: 10 }}>
               Hướng dẫn: Mở Google Sheet → <strong>Chia sẻ</strong> → Chọn{" "}
               <strong>"Bất kỳ ai có đường liên kết"</strong> → <strong>Người xem</strong>
             </p>
             <button className="sidebar-reload-btn" style={{ marginTop: 14, maxWidth: 200 }} onClick={reload}>
-              🔄 Thử lại
+              Thử lại
             </button>
           </div>
         </div>
@@ -134,7 +126,7 @@ export default function DashboardPage() {
               Tỷ lệ: <strong>{fmtPct(currMetrics.pct)}</strong>
             </div>
           </div>
-          <div style={{ fontSize: "0.7rem", color: "#bbb" }}>Cập nhật: {now}</div>
+          <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Cập nhật: {now}</div>
         </header>
 
         {/* Content */}
@@ -154,32 +146,16 @@ export default function DashboardPage() {
           {/* 3. Division */}
           <DivisionChart data={divisionData} selectedDate={effectiveDate} prevDate={prevDate} />
 
-          {/* 4. Waterfall + Top/Bottom */}
-          <div className="grid-2">
-            <WaterfallChart data={divisionData} selectedDate={effectiveDate} prevDate={prevDate} />
-            <TopBottomChart data={divisionData} />
-          </div>
-
-          {/* 5. Drill-down table */}
+          {/* 4. Drill-down table */}
           <DrillDownTable
             data={drillData}
             level={drillLevel}
             onLevelChange={(l) => setDrillLevel(l as DrillLevel)}
           />
 
-          {/* 6. Daily new + Cumulative */}
-          <div className="grid-2">
-            <DailyNewChart data={trendData} />
-            <CumulativeChart data={trendData} totalHc={currMetrics.totalHc} />
-          </div>
-
-          {/* 7. Distribution */}
-          <DistributionChart data={deptData} />
-
           {/* Footer */}
           <div className="report-footer">
-            <strong>IBCS</strong> · International Business Communication Standards ·
-            Data source: <code>[GTALK] User Tracking</code> · Developed by <b>EX Team</b> · {now}
+            Data source: <b>[GTALK] User Tracking</b> · Developed by <b>EX Team</b> · {now}
           </div>
         </div>
       </div>

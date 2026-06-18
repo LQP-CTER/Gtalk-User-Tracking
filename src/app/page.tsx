@@ -1,65 +1,188 @@
-import Image from "next/image";
+"use client";
+import { useState, useMemo } from "react";
+import { useGtalkData } from "@/hooks/useGtalkData";
+import {
+  computeMetrics, buildTrendData, buildDivisionData, buildDrillData,
+  applyFilters, fmtNumber, fmtPct,
+} from "@/lib/dataUtils";
+import type { DrillLevel } from "@/lib/dataUtils";
 
-export default function Home() {
+import Sidebar from "@/components/Sidebar";
+import KpiCards from "@/components/KpiCards";
+import TrendChart from "@/components/TrendChart";
+import DivisionChart from "@/components/DivisionChart";
+import WaterfallChart from "@/components/WaterfallChart";
+import TopBottomChart from "@/components/TopBottomChart";
+import DrillDownTable from "@/components/DrillDownTable";
+import DailyNewChart from "@/components/DailyNewChart";
+import CumulativeChart from "@/components/CumulativeChart";
+import DistributionChart from "@/components/DistributionChart";
+
+export default function DashboardPage() {
+  const { employees, activeByDate, allDates, loading, error, reload } = useGtalkData();
+
+  // ─── Filter state ─────────────────────────────────────────────────────────
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedDivisions, setSelectedDivisions] = useState<string[]>([]);
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
+  const [selectedSections, setSelectedSections] = useState<string[]>([]);
+  const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
+  const [drillLevel, setDrillLevel] = useState<DrillLevel>("division_name");
+
+  // Default to last date once loaded
+  const effectiveDate = selectedDate || (allDates.length ? allDates[allDates.length - 1] : "");
+  const currIdx = allDates.indexOf(effectiveDate);
+  const prevDate = currIdx > 0 ? allDates[currIdx - 1] : null;
+  const firstDate = allDates[0] ?? null;
+
+  // ─── Filtered employees ───────────────────────────────────────────────────
+  const filteredEmployees = useMemo(
+    () => applyFilters(employees, { divisions: selectedDivisions, departments: selectedDepartments, sections: selectedSections, teams: selectedTeams }),
+    [employees, selectedDivisions, selectedDepartments, selectedSections, selectedTeams]
+  );
+
+  // ─── Metrics ──────────────────────────────────────────────────────────────
+  const currMetrics = useMemo(() => computeMetrics(effectiveDate, filteredEmployees, activeByDate), [effectiveDate, filteredEmployees, activeByDate]);
+  const prevMetrics = useMemo(() => computeMetrics(prevDate, filteredEmployees, activeByDate), [prevDate, filteredEmployees, activeByDate]);
+  const firstMetrics = useMemo(() => computeMetrics(firstDate, filteredEmployees, activeByDate), [firstDate, filteredEmployees, activeByDate]);
+
+  // ─── Trend ────────────────────────────────────────────────────────────────
+  const trendData = useMemo(() => buildTrendData(allDates, filteredEmployees, activeByDate), [allDates, filteredEmployees, activeByDate]);
+
+  // ─── Division breakdown ───────────────────────────────────────────────────
+  const divisionData = useMemo(
+    () => buildDivisionData(filteredEmployees, effectiveDate, prevDate, activeByDate, "division_name"),
+    [filteredEmployees, effectiveDate, prevDate, activeByDate]
+  );
+
+  // ─── Drill-down ───────────────────────────────────────────────────────────
+  const drillData = useMemo(
+    () => buildDrillData(filteredEmployees, effectiveDate, prevDate, activeByDate, drillLevel),
+    [filteredEmployees, effectiveDate, prevDate, activeByDate, drillLevel]
+  );
+
+  // ─── Department-level for distribution ───────────────────────────────────
+  const deptData = useMemo(
+    () => buildDivisionData(filteredEmployees, effectiveDate, prevDate, activeByDate, "department_name"),
+    [filteredEmployees, effectiveDate, prevDate, activeByDate]
+  );
+
+  // ─── Loading ──────────────────────────────────────────────────────────────
+  if (loading) return (
+    <div className="layout">
+      <div className="main">
+        <div className="loading-overlay">
+          <div className="spinner" />
+          <p>Đang tải dữ liệu từ Google Sheets…</p>
+          <p style={{ fontSize: "0.72rem", color: "#bbb" }}>Vui lòng đảm bảo Google Sheet đã được share "Anyone with link"</p>
+        </div>
+      </div>
+    </div>
+  );
+
+  // ─── Error ────────────────────────────────────────────────────────────────
+  if (error) return (
+    <div className="layout">
+      <div className="main">
+        <div className="content">
+          <div className="error-box">
+            <p><strong>❌ Không thể tải dữ liệu</strong></p>
+            <p>{error}</p>
+            <p style={{ marginTop: 10 }}>
+              Hướng dẫn: Mở Google Sheet → <strong>Chia sẻ</strong> → Chọn{" "}
+              <strong>"Bất kỳ ai có đường liên kết"</strong> → <strong>Người xem</strong>
+            </p>
+            <button className="sidebar-reload-btn" style={{ marginTop: 14, maxWidth: 200 }} onClick={reload}>
+              🔄 Thử lại
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const now = new Date().toLocaleString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="layout">
+      <Sidebar
+        allDates={allDates}
+        employees={employees}
+        selectedDate={effectiveDate}
+        selectedDivisions={selectedDivisions}
+        selectedDepartments={selectedDepartments}
+        selectedSections={selectedSections}
+        selectedTeams={selectedTeams}
+        onDateChange={setSelectedDate}
+        onDivisionsChange={setSelectedDivisions}
+        onDepartmentsChange={setSelectedDepartments}
+        onSectionsChange={setSelectedSections}
+        onTeamsChange={setSelectedTeams}
+        onReload={reload}
+        loading={loading}
+      />
+
+      <div className="main">
+        {/* Header */}
+        <header className="report-header">
+          <div>
+            <h1>GTALK MESSAGING ADOPTION REPORT</h1>
+            <div className="header-sub">
+              Báo cáo tỷ lệ nhắn tin Gtalk · Ngày:{" "}
+              <strong>{effectiveDate}</strong> · Đã nhắn tin:{" "}
+              <strong>{fmtNumber(currMetrics.activeCount)}/{fmtNumber(currMetrics.totalHc)}</strong> ·
+              Tỷ lệ: <strong>{fmtPct(currMetrics.pct)}</strong>
+            </div>
+          </div>
+          <div style={{ fontSize: "0.7rem", color: "#bbb" }}>Cập nhật: {now}</div>
+        </header>
+
+        {/* Content */}
+        <div className="content">
+          {/* 1. KPI Cards */}
+          <KpiCards
+            curr={currMetrics}
+            prev={prevMetrics}
+            first={firstMetrics}
+            selectedDate={effectiveDate}
+            prevDate={prevDate}
+          />
+
+          {/* 2. Trend */}
+          <TrendChart data={trendData} />
+
+          {/* 3. Division */}
+          <DivisionChart data={divisionData} selectedDate={effectiveDate} prevDate={prevDate} />
+
+          {/* 4. Waterfall + Top/Bottom */}
+          <div className="grid-2">
+            <WaterfallChart data={divisionData} selectedDate={effectiveDate} prevDate={prevDate} />
+            <TopBottomChart data={divisionData} />
+          </div>
+
+          {/* 5. Drill-down table */}
+          <DrillDownTable
+            data={drillData}
+            level={drillLevel}
+            onLevelChange={(l) => setDrillLevel(l as DrillLevel)}
+          />
+
+          {/* 6. Daily new + Cumulative */}
+          <div className="grid-2">
+            <DailyNewChart data={trendData} />
+            <CumulativeChart data={trendData} totalHc={currMetrics.totalHc} />
+          </div>
+
+          {/* 7. Distribution */}
+          <DistributionChart data={deptData} />
+
+          {/* Footer */}
+          <div className="report-footer">
+            <strong>IBCS</strong> · International Business Communication Standards ·
+            Data source: <code>[GTALK] User Tracking</code> · Developed by <b>EX Team</b> · {now}
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </div>
     </div>
   );
 }

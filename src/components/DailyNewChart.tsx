@@ -43,7 +43,7 @@ export default function DailyNewChart({ data }: DailyNewChartProps) {
           <ReferenceLine y={avg} stroke="#2563eb" strokeDasharray="5 3" strokeWidth={1.5}
             label={{ value: `TB: ${Math.round(avg)}`, position: "right", style: { fontSize: 9, fill: "#2563eb" } }} />
           <Bar dataKey="newUsers" maxBarSize={45} radius={[2, 2, 0, 0]}
-            label={{ position: "top", formatter: (v: number) => v > 0 ? v.toLocaleString("vi-VN") : "", style: { fontSize: 9, fill: "#333" } }}>
+            label={{ position: "top", formatter: (v: any) => v > 0 ? v.toLocaleString("vi-VN") : "", style: { fontSize: 9, fill: "#333" } }}>
             {daily.map((d, i) => (
               <Cell key={i} fill={d.newUsers >= avg ? "#1a1a1a" : "#cccccc"} />
             ))}

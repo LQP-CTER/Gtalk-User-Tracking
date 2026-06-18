@@ -55,7 +55,7 @@ export default function TopBottomChart({ data }: TopBottomChartProps) {
           <YAxis type="category" dataKey="name" tick={{ fontSize: 9, fill: "#555" }} width={155} />
           <Tooltip content={<CustomTooltip />} />
           <Bar dataKey="pctCurr" maxBarSize={14} radius={[0, 2, 2, 0]}
-            label={{ position: "right", formatter: (v: number) => `${v.toFixed(1)}%`, style: { fontSize: 9, fill: "#333" } }}>
+            label={{ position: "right", formatter: (v: any) => `${v.toFixed(1)}%`, style: { fontSize: 9, fill: "#333" } }}>
             {combined.map((r, i) => (
               <Cell key={i} fill={topNames.has(r.name) ? "#1a1a1a" : "#cccccc"} />
             ))}

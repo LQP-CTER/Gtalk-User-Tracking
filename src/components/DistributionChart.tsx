@@ -57,7 +57,7 @@ export default function DistributionChart({ data }: DistributionChartProps) {
             <YAxis tick={{ fontSize: 10, fill: "#888" }} allowDecimals={false} />
             <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="count" maxBarSize={70} radius={[3, 3, 0, 0]}
-              label={{ position: "top", formatter: (v: number) => v > 0 ? v : "", style: { fontSize: 11, fill: "#333", fontWeight: 600 } }}>
+              label={{ position: "top", formatter: (v: any) => v > 0 ? v : "", style: { fontSize: 11, fill: "#333", fontWeight: 600 } }}>
               {bucketData.map((b, i) => (
                 <Cell key={i} fill={b.color} />
               ))}

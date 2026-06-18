@@ -58,7 +58,7 @@ export default function WaterfallChart({ data, selectedDate, prevDate }: Waterfa
           <Tooltip content={<CustomTooltip />} />
           <ReferenceLine y={0} stroke="#999" strokeWidth={1} />
           <Bar dataKey="deltaAbs" maxBarSize={45} radius={[2, 2, 0, 0]}
-            label={{ position: "top", formatter: (v: number) => `${v > 0 ? "+" : ""}${v}`, style: { fontSize: 9, fill: "#333" } }}>
+            label={{ position: "top", formatter: (v: any) => `${v > 0 ? "+" : ""}${v}`, style: { fontSize: 9, fill: "#333" } }}>
             {changed.map((r, i) => (
               <Cell key={i} fill={r.deltaAbs >= 0 ? "#16a34a" : "#dc2626"} />
             ))}

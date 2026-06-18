@@ -84,7 +84,7 @@ export default function TrendChart({ data }: TrendChartProps) {
             activeDot={{ r: 6 }}
             label={{
               position: "top",
-              formatter: (v: number) => `${v.toFixed(1)}%`,
+              formatter: (v: any) => `${v.toFixed(1)}%`,
               style: { fontSize: 9, fill: "#333" },
             }}
           />

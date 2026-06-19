@@ -47,14 +47,14 @@ export default function DivisionChart({ data, selectedDate, prevDate }: Division
     <div className="section">
       <div className="section-title">Phân Tích Theo Khối</div>
       <div className="section-msg">{msg}</div>
-      <div className="grid-3-2" style={{ alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "32px", alignItems: "start" }}>
         {/* Chart */}
         <div>
           <ResponsiveContainer width="100%" height={Math.max(260, sorted.length * 50)}>
             <BarChart
               layout="vertical"
               data={sorted}
-              margin={{ top: 4, right: 60, bottom: 4, left: 160 }}
+              margin={{ top: 4, right: 60, bottom: 4, left: 220 }}
             >
               <defs>
                 <linearGradient id="gradCurr" x1="0" y1="0" x2="1" y2="0">
@@ -76,7 +76,8 @@ export default function DivisionChart({ data, selectedDate, prevDate }: Division
               <YAxis
                 type="category" dataKey="name"
                 tick={{ fontSize: 11, fill: "#475569", fontFamily: "Inter" }}
-                width={155}
+                width={210}
+                tickFormatter={(v) => v.length > 30 ? v.substring(0, 28) + '...' : v}
                 axisLine={false} tickLine={false}
               />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.04)" }} />
@@ -104,7 +105,7 @@ export default function DivisionChart({ data, selectedDate, prevDate }: Division
             <tbody>
               {data.map((r) => (
                 <tr key={r.name}>
-                  <td style={{ maxWidth: 150, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={r.name}>{r.name}</td>
+                  <td style={{ fontWeight: 500, lineHeight: 1.4 }} title={r.name}>{r.name}</td>
                   <td className="num">{r.total.toLocaleString("vi-VN")}</td>
                   <td className="num">{r.activeCurr.toLocaleString("vi-VN")}</td>
                   <td className="num" style={{ fontWeight: 600 }}>{r.pctCurr.toFixed(1)}%</td>

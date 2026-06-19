@@ -71,7 +71,7 @@ export default function DrillDownTable({ data, level, onLevelChange }: DrillDown
                 return (
                   <tr key={r.name}>
                     <td className="num" style={{ color: "#cbd5e1", fontSize: "0.75rem", fontWeight: 600 }}>{r.rank}</td>
-                    <td style={{ maxWidth: 280, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: 500 }} title={r.name}>{r.name}</td>
+                    <td style={{ fontWeight: 500, lineHeight: 1.4 }} title={r.name}>{r.name}</td>
                     <td className="num">{r.total.toLocaleString("vi-VN")}</td>
                     <td className="num" style={{ fontWeight: 600 }}>{r.activeC.toLocaleString("vi-VN")}</td>
                     <td className="num" style={{ color: "#94a3b8" }}>{r.inactive.toLocaleString("vi-VN")}</td>

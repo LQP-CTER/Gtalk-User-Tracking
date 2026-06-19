@@ -33,17 +33,10 @@ export default function UserDetailTable({ employees, activeSet, date }: UserDeta
         <div>
           <input
             type="text"
+            className="modern-search-input"
             placeholder="Tìm theo ID, Tên, Phòng ban..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{
-              padding: "8px 12px",
-              borderRadius: "8px",
-              border: "1px solid rgba(15, 23, 42, 0.13)",
-              fontSize: "0.85rem",
-              width: "250px",
-              fontFamily: "'Inter', sans-serif"
-            }}
           />
         </div>
       </div>

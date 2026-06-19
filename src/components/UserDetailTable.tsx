@@ -24,13 +24,38 @@ export default function UserDetailTable({ employees, activeSet, date }: UserDeta
     );
   }, [employees, activeSet, searchTerm]);
 
+  const handleExport = () => {
+    if (activeEmployees.length === 0) return;
+
+    let csvContent = "ID Nhan vien,Ho va Ten,Job Title,Section,Department\n";
+
+    activeEmployees.forEach(e => {
+      const name = `"${e.employee_name.replace(/"/g, '""')}"`;
+      const title = `"${(e.jobtitle_name_vn || e.jobtitle_name || "-").replace(/"/g, '""')}"`;
+      const section = `"${e.section_name.replace(/"/g, '""')}"`;
+      const dept = `"${e.department_name.replace(/"/g, '""')}"`;
+      
+      csvContent += `${e.employee_id},${name},${title},${section},${dept}\n`;
+    });
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `DanhSachActive_${date.replace(/\//g, '-')}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="chart-card">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
         <div className="section-title" style={{ marginBottom: 0 }}>
           Danh sách chi tiết User Active (Ngày {date})
         </div>
-        <div>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <input
             type="text"
             className="modern-search-input"
@@ -38,6 +63,25 @@ export default function UserDetailTable({ employees, activeSet, date }: UserDeta
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          <button
+            onClick={handleExport}
+            disabled={activeEmployees.length === 0}
+            style={{
+              padding: "11px 18px",
+              background: activeEmployees.length === 0 ? "#cbd5e1" : "var(--accent)",
+              color: "white",
+              border: "none",
+              borderRadius: "12px",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.85rem",
+              fontWeight: 600,
+              cursor: activeEmployees.length === 0 ? "not-allowed" : "pointer",
+              boxShadow: activeEmployees.length === 0 ? "none" : "0 4px 12px rgba(99, 102, 241, 0.25)",
+              transition: "all 0.2s ease"
+            }}
+          >
+            Xuất Excel
+          </button>
         </div>
       </div>
       

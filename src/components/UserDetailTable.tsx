@@ -53,12 +53,11 @@ export default function UserDetailTable({ employees, activeSet, date }: UserDeta
         {searchTerm && " (trong kết quả tìm kiếm)"}
       </div>
 
-      <div style={{ overflowX: "auto", maxHeight: "600px" }}>
-        <table className="data-table">
-          <thead style={{ position: "sticky", top: 0, background: "white", zIndex: 1 }}>
+      <div className="modern-table-wrap">
+        <table className="modern-table">
+          <thead>
             <tr>
-              <th>ID Nhân viên</th>
-              <th>Họ và Tên</th>
+              <th>Nhân viên</th>
               <th>Job Title</th>
               <th>Section</th>
               <th>Department</th>
@@ -67,20 +66,33 @@ export default function UserDetailTable({ employees, activeSet, date }: UserDeta
           <tbody>
             {activeEmployees.length === 0 ? (
               <tr>
-                <td colSpan={5} style={{ textAlign: "center", padding: "20px" }}>
-                  Không tìm thấy user nào
+                <td colSpan={4} style={{ textAlign: "center", padding: "40px", color: "#94a3b8" }}>
+                  Không tìm thấy user nào phù hợp.
                 </td>
               </tr>
             ) : (
-              activeEmployees.map((e) => (
-                <tr key={e.employee_id}>
-                  <td>{e.employee_id}</td>
-                  <td style={{ fontWeight: 500 }}>{e.employee_name}</td>
-                  <td>{e.jobtitle_name_vn || e.jobtitle_name || "-"}</td>
-                  <td>{e.section_name}</td>
-                  <td>{e.department_name}</td>
-                </tr>
-              ))
+              activeEmployees.map((e) => {
+                // Get initials for avatar (e.g. "Nguyen Van A" -> "A")
+                const parts = e.employee_name.trim().split(" ");
+                const initial = parts.length > 0 ? parts[parts.length - 1][0].toUpperCase() : "U";
+
+                return (
+                  <tr key={e.employee_id}>
+                    <td>
+                      <div className="user-profile-cell">
+                        <div className="user-avatar">{initial}</div>
+                        <div className="user-info">
+                          <span className="user-name">{e.employee_name}</span>
+                          <span className="user-id">#{e.employee_id}</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{e.jobtitle_name_vn || e.jobtitle_name || "-"}</td>
+                    <td>{e.section_name}</td>
+                    <td>{e.department_name}</td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

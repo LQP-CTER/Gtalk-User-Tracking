@@ -467,6 +467,90 @@ html, body {
   color: var(--accent);
 }
 
+/* ─── Modern Table (Detail) ─────────────────────────────────────────────────── */
+.modern-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  max-height: 600px;
+}
+.modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.88rem;
+}
+.modern-table thead th {
+  position: sticky;
+  top: 0;
+  background: #f8fafc;
+  z-index: 10;
+  padding: 16px 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-align: left;
+  border-bottom: 1px solid var(--border-strong);
+  white-space: nowrap;
+}
+.modern-table tbody td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-weight: 500;
+  vertical-align: middle;
+}
+.modern-table tbody tr {
+  transition: background 0.15s ease;
+}
+.modern-table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.04);
+}
+.modern-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* User Profile in Table */
+.user-profile-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--grad-soft);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.user-name {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+.user-id {
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
 /* ─── Progress bar ──────────────────────────────────────────────────────────── */
 .table-progress-bg {
   width: 80px;

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "GTalk Messaging Adoption · Dashboard",
+  title: "DAU (Daily Active User) · Dashboard",
   description: "Báo cáo tỷ lệ nhắn tin trên Gtalk theo chuẩn IBCS – GHN Express",
 };
 

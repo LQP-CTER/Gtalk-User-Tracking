@@ -118,7 +118,7 @@ export default function DashboardPage() {
         {/* Header */}
         <header className="report-header">
           <div>
-            <h1>GTALK MESSAGING ADOPTION REPORT</h1>
+            <h1>DAU (Daily Active User)</h1>
             <div className="header-sub">
               Báo cáo tỷ lệ nhắn tin Gtalk · Ngày:{" "}
               <strong>{effectiveDate}</strong> · Đã nhắn tin:{" "}

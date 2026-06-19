@@ -14,7 +14,8 @@ import DivisionChart from "@/components/DivisionChart";
 
 import DrillDownTable from "@/components/DrillDownTable";
 import UserDetailTable from "@/components/UserDetailTable";
-import { Tab } from "@/components/Sidebar";
+
+type Tab = "dashboard" | "detail";
 
 export default function DashboardPage() {
   const { employees, activeByDate, allDates, loading, error, reload } = useGtalkData();
@@ -101,8 +102,6 @@ export default function DashboardPage() {
   return (
     <div className="layout">
       <Sidebar
-        currentTab={currentTab}
-        onTabChange={setCurrentTab}
         allDates={allDates}
         employees={employees}
         selectedDate={effectiveDate}
@@ -136,6 +135,21 @@ export default function DashboardPage() {
 
         {/* Content */}
         <div className="content">
+          <div className="main-tabs">
+            <button 
+              className={`main-tab ${currentTab === "dashboard" ? "active" : ""}`}
+              onClick={() => setCurrentTab("dashboard")}
+            >
+              Bộ phận
+            </button>
+            <button 
+              className={`main-tab ${currentTab === "detail" ? "active" : ""}`}
+              onClick={() => setCurrentTab("detail")}
+            >
+              Chi tiết danh sách
+            </button>
+          </div>
+
           {currentTab === "dashboard" ? (
             <>
               {/* 1. KPI Cards */}

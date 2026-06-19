@@ -118,7 +118,7 @@ export default function Sidebar({
     <aside className="sidebar">
       {/* Logo */}
       <div className="sidebar-logo">
-        <div className="app-title">DAU (Daily Active User)</div>
+        <div className="app-title">Daily Active User</div>
         <div className="app-sub">Adoption Report · EX Team</div>
       </div>
 

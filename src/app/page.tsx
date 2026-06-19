@@ -13,11 +13,14 @@ import TrendChart from "@/components/TrendChart";
 import DivisionChart from "@/components/DivisionChart";
 
 import DrillDownTable from "@/components/DrillDownTable";
+import UserDetailTable from "@/components/UserDetailTable";
+import { Tab } from "@/components/Sidebar";
 
 export default function DashboardPage() {
   const { employees, activeByDate, allDates, loading, error, reload } = useGtalkData();
 
   // ─── Filter state ─────────────────────────────────────────────────────────
+  const [currentTab, setCurrentTab] = useState<Tab>("dashboard");
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedDivisions, setSelectedDivisions] = useState<string[]>([]);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
@@ -98,6 +101,8 @@ export default function DashboardPage() {
   return (
     <div className="layout">
       <Sidebar
+        currentTab={currentTab}
+        onTabChange={setCurrentTab}
         allDates={allDates}
         employees={employees}
         selectedDate={effectiveDate}
@@ -131,27 +136,37 @@ export default function DashboardPage() {
 
         {/* Content */}
         <div className="content">
-          {/* 1. KPI Cards */}
-          <KpiCards
-            curr={currMetrics}
-            prev={prevMetrics}
-            first={firstMetrics}
-            selectedDate={effectiveDate}
-            prevDate={prevDate}
-          />
+          {currentTab === "dashboard" ? (
+            <>
+              {/* 1. KPI Cards */}
+              <KpiCards
+                curr={currMetrics}
+                prev={prevMetrics}
+                first={firstMetrics}
+                selectedDate={effectiveDate}
+                prevDate={prevDate}
+              />
 
-          {/* 2. Trend */}
-          <TrendChart data={trendData} />
+              {/* 2. Trend */}
+              <TrendChart data={trendData} />
 
-          {/* 3. Division */}
-          <DivisionChart data={divisionData} selectedDate={effectiveDate} prevDate={prevDate} />
+              {/* 3. Division */}
+              <DivisionChart data={divisionData} selectedDate={effectiveDate} prevDate={prevDate} />
 
-          {/* 4. Drill-down table */}
-          <DrillDownTable
-            data={drillData}
-            level={drillLevel}
-            onLevelChange={(l) => setDrillLevel(l as DrillLevel)}
-          />
+              {/* 4. Drill-down table */}
+              <DrillDownTable
+                data={drillData}
+                level={drillLevel}
+                onLevelChange={(l) => setDrillLevel(l as DrillLevel)}
+              />
+            </>
+          ) : (
+            <UserDetailTable 
+              employees={filteredEmployees}
+              activeSet={activeByDate[effectiveDate] || new Set()}
+              date={effectiveDate}
+            />
+          )}
 
           {/* Footer */}
           <div className="report-footer">

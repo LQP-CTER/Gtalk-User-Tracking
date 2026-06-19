@@ -3,7 +3,11 @@ import { useState } from "react";
 import { Employee } from "@/types";
 import { getUniqueValues } from "@/lib/dataUtils";
 
+export type Tab = "dashboard" | "detail";
+
 interface SidebarProps {
+  currentTab: Tab;
+  onTabChange: (t: Tab) => void;
   allDates: string[];
   employees: Employee[];
   selectedDate: string;
@@ -91,6 +95,7 @@ function MultiSelect({
 }
 
 export default function Sidebar({
+  currentTab, onTabChange,
   allDates, employees,
   selectedDate, selectedDivisions, selectedDepartments, selectedSections, selectedTeams,
   onDateChange, onDivisionsChange, onDepartmentsChange, onSectionsChange, onTeamsChange,
@@ -123,8 +128,17 @@ export default function Sidebar({
       </div>
 
       <div className="sidebar-menu">
-        <button className="sidebar-menu-item active">
+        <button 
+          className={`sidebar-menu-item ${currentTab === "dashboard" ? "active" : ""}`}
+          onClick={() => onTabChange("dashboard")}
+        >
           DAU Dashboard
+        </button>
+        <button 
+          className={`sidebar-menu-item ${currentTab === "detail" ? "active" : ""}`}
+          onClick={() => onTabChange("detail")}
+        >
+          Bảng chi tiết
         </button>
       </div>
 

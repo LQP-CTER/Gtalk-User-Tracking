@@ -118,7 +118,7 @@ export default function DashboardPage() {
         {/* Header */}
         <header className="report-header">
           <div>
-            <h1>DAU (Daily Active User)</h1>
+            <h1>Daily Active User - DAU</h1>
             <div className="header-sub">
               Báo cáo tỷ lệ Active User · Ngày:{" "}
               <strong>{effectiveDate}</strong> · Đã active:{" "}

@@ -28,9 +28,13 @@ function parseWorkforce(rows: string[][]): Employee[] {
   const idxJobtitle = idx("jobtitle_name");
   const idxJobtitleVn = idx("jobtitle_name_vn");
   const idxTeam = idx("team_name");
+  const idxTeamVn = idx("team_name_vn");
   const idxSection = idx("section_name");
+  const idxSectionVn = idx("section_name_vn");
   const idxDept = idx("department_name");
+  const idxDeptVn = idx("department_name_vn");
   const idxDiv = idx("division_name");
+  const idxDivVn = idx("division_name_vn");
   const idxBu = idx("bu_name");
 
   const employees: Employee[] = [];
@@ -42,12 +46,12 @@ function parseWorkforce(rows: string[][]): Employee[] {
       employee_id: empId,
       employee_name: r[idxName]?.trim() || "",
       status: parseInt(r[idxStatus]?.trim() || "0", 10),
-      jobtitle_name: r[idxJobtitle]?.trim() || "",
+      jobtitle_name: r[idxJobtitleVn]?.trim() || r[idxJobtitle]?.trim() || "",
       jobtitle_name_vn: r[idxJobtitleVn]?.trim() || "",
-      team_name: r[idxTeam]?.trim() || "",
-      section_name: r[idxSection]?.trim() || "",
-      department_name: r[idxDept]?.trim() || "",
-      division_name: r[idxDiv]?.trim() || "",
+      team_name: r[idxTeamVn]?.trim() || r[idxTeam]?.trim() || "",
+      section_name: r[idxSectionVn]?.trim() || r[idxSection]?.trim() || "",
+      department_name: r[idxDeptVn]?.trim() || r[idxDept]?.trim() || "",
+      division_name: r[idxDivVn]?.trim() || r[idxDiv]?.trim() || "",
       bu_name: r[idxBu]?.trim() || "",
     });
   }

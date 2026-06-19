@@ -122,6 +122,12 @@ export default function Sidebar({
         <div className="app-sub">Adoption Report · EX Team</div>
       </div>
 
+      <div className="sidebar-menu">
+        <button className="sidebar-menu-item active">
+          DAU Dashboard
+        </button>
+      </div>
+
       <div className="sidebar-body">
         {/* Reload */}
         <button className="sidebar-reload-btn" onClick={onReload} disabled={loading}>

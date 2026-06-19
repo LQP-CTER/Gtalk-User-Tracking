@@ -94,7 +94,39 @@ html, body {
   letter-spacing: 0.01em;
 }
 
-.sidebar-body { padding: 18px 16px; flex: 1; }
+/* Sidebar Menu */
+.sidebar-menu {
+  padding: 0 16px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+.sidebar-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+.sidebar-menu-item:hover {
+  background: var(--surface-subtle);
+  color: var(--text);
+}
+.sidebar-menu-item.active {
+  background: var(--grad-soft);
+  color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.sidebar-body { padding: 8px 16px 18px; flex: 1; }
 .sidebar-label {
   font-size: 0.68rem;
   font-weight: 700;

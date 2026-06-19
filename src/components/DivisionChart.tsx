@@ -96,7 +96,7 @@ export default function DivisionChart({ data, selectedDate, prevDate }: Division
               <tr>
                 <th>Khối</th>
                 <th className="num">HC</th>
-                <th className="num">Nhắn tin</th>
+                <th className="num">Active</th>
                 <th className="num">%</th>
                 <th className="num">Thay đổi</th>
               </tr>

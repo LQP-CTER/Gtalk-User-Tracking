@@ -37,12 +37,12 @@ export default function TrendChart({ data }: TrendChartProps) {
   if (!data.length) return null;
 
   const msg = data.length >= 2
-    ? `Tỷ lệ nhắn tin: ${data[0].pct.toFixed(1)}% → ${data[data.length - 1].pct.toFixed(1)}% (${(data[data.length - 1].pct - data[0].pct) >= 0 ? "+" : ""}${(data[data.length - 1].pct - data[0].pct).toFixed(1)}pp) trong ${data.length} kỳ`
+    ? `Tỷ lệ Active: ${data[0].pct.toFixed(1)}% → ${data[data.length - 1].pct.toFixed(1)}% (${(data[data.length - 1].pct - data[0].pct) >= 0 ? "+" : ""}${(data[data.length - 1].pct - data[0].pct).toFixed(1)}pp) trong ${data.length} kỳ`
     : "";
 
   return (
     <div className="section">
-      <div className="section-title">Xu Hướng Nhắn Tin Theo Thời Gian</div>
+      <div className="section-title">Xu Hướng Active Theo Thời Gian</div>
       {msg && <div className="section-msg">{msg}</div>}
       <ResponsiveContainer width="100%" height={300}>
         <ComposedChart data={data} margin={{ top: 16, right: 56, bottom: 32, left: 8 }}>
@@ -98,7 +98,7 @@ export default function TrendChart({ data }: TrendChartProps) {
           <Area
             yAxisId="right"
             dataKey="pct"
-            name="% Nhắn tin"
+            name="% Active"
             type="monotone"
             stroke="#6366f1"
             strokeWidth={2.5}

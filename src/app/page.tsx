@@ -120,8 +120,8 @@ export default function DashboardPage() {
           <div>
             <h1>DAU (Daily Active User)</h1>
             <div className="header-sub">
-              Báo cáo tỷ lệ nhắn tin Gtalk · Ngày:{" "}
-              <strong>{effectiveDate}</strong> · Đã nhắn tin:{" "}
+              Báo cáo tỷ lệ Active User · Ngày:{" "}
+              <strong>{effectiveDate}</strong> · Đã active:{" "}
               <strong>{fmtNumber(currMetrics.activeCount)}/{fmtNumber(currMetrics.totalHc)}</strong> ·
               Tỷ lệ: <strong>{fmtPct(currMetrics.pct)}</strong>
             </div>
@@ -155,7 +155,7 @@ export default function DashboardPage() {
 
           {/* Footer */}
           <div className="report-footer">
-            Data source: <b>[GTALK] User Tracking</b> · Developed by <b>EX Team</b> · {now}
+            Data source: <b>[DAU] User Tracking</b> · Developed by <b>EX Team</b> · {now}
           </div>
         </div>
       </div>

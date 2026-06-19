@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "DAU (Daily Active User) · Dashboard",
-  description: "Báo cáo tỷ lệ nhắn tin trên Gtalk theo chuẩn IBCS – GHN Express",
+  description: "Báo cáo tỷ lệ Daily Active User theo chuẩn IBCS – GHN Express",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

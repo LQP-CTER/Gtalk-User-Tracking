@@ -55,7 +55,7 @@ export default function DrillDownTable({ data, level, onLevelChange }: DrillDown
                 <th style={{ width: 32 }}>#</th>
                 <th>{LEVELS.find((l) => l.key === level)?.label}</th>
                 <th className="num">HC</th>
-                <th className="num">Nhắn tin</th>
+                <th className="num">Active</th>
                 <th className="num">Chưa</th>
                 <th className="num">Tỷ lệ</th>
                 <th style={{ minWidth: 90 }}></th>

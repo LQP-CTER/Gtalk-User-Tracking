@@ -29,10 +29,10 @@ export default function KpiCards({ curr, prev, first, selectedDate, prevDate }: 
 
       {/* Active */}
       <div className="kpi-card green">
-        <div className="kpi-label">Đã Nhắn Tin</div>
+        <div className="kpi-label">Đã Active</div>
         <div className="kpi-value">{fmtNumber(curr.activeCount)}</div>
         <div className="kpi-sub">
-          Có nhắn tin trên Gtalk ·{" "}
+          Đã active trong ngày ·{" "}
           <span className={dActive.cls}>{dActive.text}</span>{" "}
           {prevDate ? `so với ${prevDate}` : ""}
         </div>
@@ -40,14 +40,14 @@ export default function KpiCards({ curr, prev, first, selectedDate, prevDate }: 
 
       {/* Not yet */}
       <div className="kpi-card red">
-        <div className="kpi-label">Chưa Nhắn Tin</div>
+        <div className="kpi-label">Chưa Active</div>
         <div className="kpi-value">{fmtNumber(curr.inactiveCount)}</div>
-        <div className="kpi-sub">Chưa nhắn tin trên Gtalk ngày {selectedDate}</div>
+        <div className="kpi-sub">Chưa active trong ngày {selectedDate}</div>
       </div>
 
       {/* % */}
       <div className="kpi-card blue">
-        <div className="kpi-label">Tỷ Lệ Nhắn Tin</div>
+        <div className="kpi-label">Tỷ Lệ Active</div>
         <div className="kpi-value">{fmtPct(curr.pct)}</div>
         <div className="kpi-sub">
           Kỳ trước:{" "}
